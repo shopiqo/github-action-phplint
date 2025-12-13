@@ -3,12 +3,18 @@
 set -xe
 
 LINTER_PATH="/root/.composer/vendor/bin/phplint -vvv"
-CONFIG_FILE="/github/workspace/${INPUT_CONFIG_FILE}"
-TARGET_PATH="/github/workspace/${INPUT_PATH}"
+CONFIG_FILE="${INPUT_CONFIG_FILE}"
+TARGET_PATH="${INPUT_PATH}"
 
 if [ -f "$CONFIG_FILE" ]; then
     CMD="$LINTER_PATH -c $CONFIG_FILE -- $TARGET_PATH"
 else
+    if [ -n "$CONFIG_FILE" ]; then
+        echo "Config file not found: $CONFIG_FILE"
+        echo "Current directory files:"
+        ls -la
+    fi
+
     CMD="$LINTER_PATH --no-configuration"
 
     if [ "$INPUT_WARNING" = "true" ]; then
