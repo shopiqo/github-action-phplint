@@ -13,9 +13,9 @@ RUN \
     set -xe && \
     composer --quiet global require overtrue/phplint:${PHPLINT_PACKAGE_VERSION}
 
-FROM php:${PHP_VERSION}-cli
+FROM php:${PHP_VERSION}-cli-alpine
 
-WORKDIR /github/workspace
+WORKDIR /workdir
 
 COPY --from=build /tmp/vendor /root/.composer/vendor
 

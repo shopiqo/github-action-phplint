@@ -2,9 +2,20 @@
 
 set -xe
 
-LINTER_PATH="/root/.composer/vendor/bin/phplint -vvv"
+COMPOSER_HOME="/root/.composer"
+LINTER_PATH="${COMPOSER_HOME}/vendor/bin/phplint -vvv"
 CONFIG_FILE="${INPUT_CONFIG_FILE}"
-TARGET_PATH="${INPUT_PATH}"
+TARGET_PATH="${INPUT_PATH:-/workdir}"
+
+if [ ! -z "${GITHUB_WORKSPACE}" ]; then
+  WORKSPACE=$GITHUB_WORKSPACE
+elif [ ! -z "${CI_PROJECT_DIR}" ]; then
+  WORKSPACE=$CI_PROJECT_DIR
+else
+  WORKSPACE="/workdir"
+fi
+
+cd $WORKSPACE; 
 
 if [ -f "$CONFIG_FILE" ]; then
     CMD="$LINTER_PATH -c $CONFIG_FILE -- $TARGET_PATH"
